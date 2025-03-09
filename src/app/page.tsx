@@ -219,9 +219,9 @@ export default function Home() {
           </div>
         )}
         
-        <div className="flex-1 w-full flex flex-col items-center gap-8 sm:gap-16">
-          <div className="flex flex-col items-center">
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+        <div className="flex-1 w-full flex flex-col items-center gap-8">
+          <div className="flex flex-col items-center w-full">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full max-w-lg">
               {isAutoRefreshing && (
                 <div className="flex items-center gap-3 bg-white/80 dark:bg-gray-800/80 
                               backdrop-blur-sm px-5 py-3 rounded-xl shadow-lg 

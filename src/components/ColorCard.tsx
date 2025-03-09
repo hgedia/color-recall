@@ -26,7 +26,7 @@ const ColorCard: FC<ColorCardProps> = ({ color, size }) => {
   return (
     <div 
       onClick={handleClick}
-      className="group relative w-full sm:w-[400px] h-[300px] sm:h-[calc(100vh-12rem)] rounded-lg shadow-lg 
+      className="group relative w-full sm:w-[400px] h-[calc(33vh-4rem)] sm:h-[calc(100vh-12rem)] rounded-lg shadow-lg 
                 cursor-pointer transition-all duration-300 hover:scale-105
                 dark:shadow-gray-900/30"
       style={{
