@@ -170,9 +170,9 @@ export default function Home() {
                     bg-gradient-to-b from-gray-50 to-white
                     dark:from-gray-950 dark:to-gray-900">
       <div className="w-full max-w-[1600px] flex flex-col">
-        <div className="w-full flex justify-between items-center mb-16">
-          <div className="flex items-center gap-8">
-            <h1 className="text-4xl font-bold bg-clip-text text-transparent 
+        <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-6 sm:gap-0 mb-8 sm:mb-16">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent 
                           bg-gradient-to-r from-blue-600 to-blue-400
                           dark:from-blue-400 dark:to-blue-300">
               Color Flash Cards
@@ -203,9 +203,10 @@ export default function Home() {
         </div>
 
         {showSettings && (
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[90vw] sm:w-auto">
             <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg 
-                          border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl">
+                          border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl
+                          max-h-[80vh] overflow-y-auto">
               <Settings
                 numCards={numCards}
                 onNumCardsChange={handleNumCardsChange}
@@ -218,13 +219,14 @@ export default function Home() {
           </div>
         )}
         
-        <div className="flex-1 w-full flex flex-col items-center gap-16">
+        <div className="flex-1 w-full flex flex-col items-center gap-8 sm:gap-16">
           <div className="flex flex-col items-center">
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
               {isAutoRefreshing && (
                 <div className="flex items-center gap-3 bg-white/80 dark:bg-gray-800/80 
                               backdrop-blur-sm px-5 py-3 rounded-xl shadow-lg 
-                              border border-gray-100 dark:border-gray-700">
+                              border border-gray-100 dark:border-gray-700
+                              w-full sm:w-auto justify-center">
                   <div className="text-4xl font-bold bg-gradient-to-r 
                                 from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 
                                 bg-clip-text text-transparent">
@@ -240,7 +242,7 @@ export default function Home() {
                 onClick={toggleAutoRefresh}
                 className={`px-8 py-4 rounded-xl transition-all duration-300
                          font-semibold shadow-lg hover:shadow-xl hover:scale-105
-                         flex items-center gap-3 text-lg
+                         flex items-center gap-3 text-lg w-full sm:w-auto justify-center
                          ${isAutoRefreshing 
                            ? 'bg-gradient-to-r from-red-500 to-red-400 dark:from-red-600 dark:to-red-500 text-white' 
                            : 'bg-gradient-to-r from-green-500 to-green-400 dark:from-green-600 dark:to-green-500 text-white'}`}
@@ -260,7 +262,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-row items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
             {colors.map((color, index) => (
               <ColorCard 
                 key={`${color}-${index}`}

@@ -61,7 +61,7 @@ const Settings: FC<SettingsProps> = ({
   };
 
   return (
-    <div className="p-6 min-w-[280px] dark:bg-gray-900">
+    <div className="p-4 sm:p-6 min-w-[280px] max-w-full sm:max-w-none dark:bg-gray-900">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Settings</h2>
         <button
@@ -78,17 +78,17 @@ const Settings: FC<SettingsProps> = ({
         </button>
       </div>
       
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             Color Scheme
           </label>
-          <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {schemeOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => onColorSchemeChange(option.value)}
-                className={`px-4 py-2 rounded-lg text-left transition-all duration-200
+                className={`px-4 py-3 rounded-lg text-left transition-all duration-200
                   ${colorScheme === option.value
                     ? 'bg-blue-500 text-white shadow-md'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -105,12 +105,12 @@ const Settings: FC<SettingsProps> = ({
             Refresh Time
           </label>
           <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {refreshTimeOptions.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => handleTimeOptionClick(option.value)}
-                  className={`px-4 py-2 rounded-lg flex-1 transition-all duration-200
+                  className={`px-3 py-3 rounded-lg text-center transition-all duration-200
                     ${(!showCustomTime && refreshTime === option.value) || (showCustomTime && option.value === -1)
                       ? 'bg-blue-500 text-white shadow-md'
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -147,12 +147,12 @@ const Settings: FC<SettingsProps> = ({
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             Number of Cards
           </label>
-          <div className="flex gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {[3, 4, 5].map((num) => (
               <button
                 key={num}
                 onClick={() => onNumCardsChange(num)}
-                className={`px-4 py-2 rounded-lg flex-1 transition-all duration-200
+                className={`px-3 py-3 rounded-lg text-center transition-all duration-200
                   ${numCards === num
                     ? 'bg-blue-500 text-white shadow-md'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
