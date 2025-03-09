@@ -91,11 +91,16 @@ export default function Home() {
   const [numCards, setNumCards] = useState(3);
   const [cardSize] = useState(400); // Fixed size
   const [colorScheme, setColorScheme] = useState<ColorScheme>('complementary');
-  const [colors, setColors] = useState(() => generateRandomColors(3, 'complementary'));
+  const [colors, setColors] = useState<string[]>([]);  // Initialize as empty array
   const [showSettings, setShowSettings] = useState(false);
   const [refreshTime, setRefreshTime] = useState(5); // Default 5 seconds
   const [isAutoRefreshing, setIsAutoRefreshing] = useState(false);
   const [countdown, setCountdown] = useState(refreshTime);
+
+  // Initialize colors on client side only
+  useEffect(() => {
+    setColors(generateRandomColors(numCards, colorScheme));
+  }, []); // Empty dependency array for initial render only
 
   const generateNewColors = useCallback(() => {
     setColors(generateRandomColors(numCards, colorScheme));
@@ -161,16 +166,24 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-4 sm:p-8 relative">
+    <main className="min-h-screen flex flex-col items-center p-4 sm:p-8 relative 
+                    bg-gradient-to-b from-gray-50 to-white
+                    dark:from-gray-950 dark:to-gray-900">
       <div className="w-full max-w-[1600px] flex flex-col">
-        <div className="w-full flex justify-between items-center mb-12">
-          <div className="flex items-center gap-6">
-            <h1 className="text-4xl font-bold">
+        <div className="w-full flex justify-between items-center mb-16">
+          <div className="flex items-center gap-8">
+            <h1 className="text-4xl font-bold bg-clip-text text-transparent 
+                          bg-gradient-to-r from-blue-600 to-blue-400
+                          dark:from-blue-400 dark:to-blue-300">
               Color Flash Cards
             </h1>
-            <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-lg">
-              <span className="font-medium text-gray-700">Scheme:</span>
-              <span className="font-medium text-blue-600">
+            <div className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 
+                          backdrop-blur-sm px-4 py-2 rounded-xl shadow-sm 
+                          border border-gray-100 dark:border-gray-700">
+              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Scheme</span>
+              <span className="text-sm font-semibold bg-gradient-to-r 
+                             from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 
+                             bg-clip-text text-transparent">
                 {getSchemeDisplayName(colorScheme)}
               </span>
             </div>
@@ -178,10 +191,11 @@ export default function Home() {
 
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className={`p-2 rounded-lg transition-all duration-300 shadow-md
+            className={`p-3 rounded-xl transition-all duration-300 
+                       shadow-lg hover:shadow-xl hover:scale-105 
                        ${showSettings 
-                         ? 'bg-blue-500 text-white' 
-                         : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                         ? 'bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-500 dark:to-blue-400 text-white' 
+                         : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
             aria-label="Settings"
           >
             <Cog6ToothIcon className={`w-6 h-6 ${showSettings ? 'rotate-180' : ''} transition-transform duration-300`} />
@@ -190,7 +204,8 @@ export default function Home() {
 
         {showSettings && (
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-            <div className="bg-white border border-gray-200 rounded-lg shadow-xl">
+            <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg 
+                          border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl">
               <Settings
                 numCards={numCards}
                 onNumCardsChange={handleNumCardsChange}
@@ -203,47 +218,49 @@ export default function Home() {
           </div>
         )}
         
-        <div className="flex-1 w-full flex flex-col items-center gap-12">
-          <div className="flex flex-col items-center gap-6">
-            <div className="flex flex-col items-center gap-4">
-              <div className="flex items-center gap-6">
-                {isAutoRefreshing && (
-                  <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-lg">
-                    <div className="text-3xl font-bold text-blue-600">
-                      {countdown}
-                    </div>
-                    <div className="text-sm font-medium text-blue-600 whitespace-nowrap">
-                      seconds
-                    </div>
+        <div className="flex-1 w-full flex flex-col items-center gap-16">
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-6">
+              {isAutoRefreshing && (
+                <div className="flex items-center gap-3 bg-white/80 dark:bg-gray-800/80 
+                              backdrop-blur-sm px-5 py-3 rounded-xl shadow-lg 
+                              border border-gray-100 dark:border-gray-700">
+                  <div className="text-4xl font-bold bg-gradient-to-r 
+                                from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 
+                                bg-clip-text text-transparent">
+                    {countdown}
                   </div>
-                )}
+                  <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    seconds
+                  </div>
+                </div>
+              )}
 
-                <button
-                  onClick={toggleAutoRefresh}
-                  className={`px-8 py-4 rounded-lg transition-all duration-300
-                           font-semibold shadow-lg hover:shadow-xl
-                           flex items-center gap-2 text-lg
-                           ${isAutoRefreshing 
-                             ? 'bg-red-500 hover:bg-red-600 text-white' 
-                             : 'bg-green-500 hover:bg-green-600 text-white'}`}
-                >
-                  {isAutoRefreshing ? (
-                    <>
-                      <StopIcon className="w-6 h-6" />
-                      Stop
-                    </>
-                  ) : (
-                    <>
-                      <PlayIcon className="w-6 h-6" />
-                      Start
-                    </>
-                  )}
-                </button>
-              </div>
+              <button
+                onClick={toggleAutoRefresh}
+                className={`px-8 py-4 rounded-xl transition-all duration-300
+                         font-semibold shadow-lg hover:shadow-xl hover:scale-105
+                         flex items-center gap-3 text-lg
+                         ${isAutoRefreshing 
+                           ? 'bg-gradient-to-r from-red-500 to-red-400 dark:from-red-600 dark:to-red-500 text-white' 
+                           : 'bg-gradient-to-r from-green-500 to-green-400 dark:from-green-600 dark:to-green-500 text-white'}`}
+              >
+                {isAutoRefreshing ? (
+                  <>
+                    <StopIcon className="w-6 h-6" />
+                    Stop
+                  </>
+                ) : (
+                  <>
+                    <PlayIcon className="w-6 h-6" />
+                    Start
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
-          <div className="flex flex-row items-center justify-center gap-4">
+          <div className="flex flex-row items-center justify-center gap-6">
             {colors.map((color, index) => (
               <ColorCard 
                 key={`${color}-${index}`}
@@ -257,7 +274,7 @@ export default function Home() {
 
       {showSettings && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/30 dark:bg-black/40 backdrop-blur-sm"
           onClick={() => setShowSettings(false)}
         />
       )}
