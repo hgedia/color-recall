@@ -1,48 +1,130 @@
-# Static Site with Next.js
+# Color Flash Cards
 
-This is a static site built with Next.js and deployed to GitHub Pages. It uses GitHub Actions for automatic deployment.
+A modern web application for learning and exploring color schemes. Built with Next.js, TypeScript, and Tailwind CSS using Cursor AI.
+
+## Features
+
+- **Multiple Color Schemes**
+  - Complementary
+  - Monochromatic
+  - Analogous
+  - Triadic
+
+- **Interactive Cards**
+  - Click to copy color codes
+  - Visual feedback on hover
+  - Responsive design for all devices
+
+- **Auto-Refresh Mode**
+  - Configurable refresh intervals
+  - Visual countdown timer
+  - Start/Stop controls
+
+- **Customization**
+  - Adjustable number of cards (3-5)
+  - Custom refresh intervals
+  - Dark/Light mode support
+
+## Tech Stack
+
+- **Framework**: Next.js 14
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Color Management**: Chroma.js
+- **Icons**: Heroicons
+- **State Management**: React Hooks
 
 ## Getting Started
 
-First, install the dependencies:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/color-recall.git
+   cd color-recall
+   ```
 
-```bash
-npm install
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Then, run the development server:
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
 
-```bash
-npm run dev
-```
+4. **Open in browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-## Deployment
+1. **Selecting Color Schemes**
+   - Click the settings icon (⚙️) in the top right
+   - Choose from available color schemes
+   - Changes apply immediately
 
-The site is automatically deployed to GitHub Pages when changes are pushed to the main branch. To set up deployment:
+2. **Auto-Refresh Mode**
+   - Click "Start" to begin auto-refresh
+   - Watch the countdown timer
+   - Click "Stop" to pause
 
-1. Go to your repository settings
-2. Navigate to "Pages" under "Code and automation"
-3. Under "Build and deployment", select "GitHub Actions" as the source
-4. Push changes to the main branch to trigger deployment
+3. **Copying Colors**
+   - Click any color card to copy its hex code
+   - Visual feedback confirms the copy action
 
-## Built With
-
-- [Next.js](https://nextjs.org/) - The React framework
-- [Tailwind CSS](https://tailwindcss.com/) - For styling
-- [TypeScript](https://www.typescriptlang.org/) - For type safety
-- [GitHub Actions](https://github.com/features/actions) - For CI/CD
-- [GitHub Pages](https://pages.github.com/) - For hosting
+4. **Adjusting Settings**
+   - Change number of cards (3-5)
+   - Set custom refresh intervals
+   - Toggle dark/light mode
 
 ## Development
 
-You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
+### Project Structure
+```
+color-recall/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx         # Main page component
+│   │   ├── layout.tsx       # Root layout
+│   │   └── ThemeContext.tsx # Dark mode context
+│   └── components/
+│       ├── ColorCard.tsx    # Color card component
+│       └── Settings.tsx     # Settings panel component
+├── public/
+└── package.json
+```
 
-## Learn More
+### Key Features Implementation
 
-To learn more about the technologies used in this project, check out the following resources:
+1. **Color Generation**
+   - Uses Chroma.js for color manipulation
+   - Implements color scheme algorithms
+   - Ensures color contrast and uniqueness
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs)
+2. **Responsive Design**
+   - Mobile-first approach
+   - Fluid layouts with Tailwind
+   - Optimized for all screen sizes
+
+3. **Theme Support**
+   - System-based dark mode detection
+   - Persistent theme preference
+   - Smooth transitions
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Acknowledgments
+
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Chroma.js](https://gka.github.io/chroma.js/)
+- [Heroicons](https://heroicons.com/)
