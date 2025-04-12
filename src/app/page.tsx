@@ -6,7 +6,15 @@ import ColorCard from '@/components/ColorCard';
 import Settings from '@/components/Settings';
 import { Cog6ToothIcon, PlayIcon, StopIcon } from '@heroicons/react/24/outline';
 
-export type ColorScheme = 'complementary' | 'monochromatic' | 'analogous' | 'triadic';
+export type ColorScheme = 'complementary' | 'monochromatic' | 'analogous' | 'triadic' | 'gamutMask';
+
+// Define gamut mask names for better UX
+export const gamutMaskNames = [
+  'Complementary Split',
+  'Triadic Split',
+  'Y-Shape Split',
+  'Analogous Slice'
+];
 
 function isColorTooSimilar(newColor: string, existingColors: string[]): boolean {
   const MIN_DISTANCE = 50; // Increased minimum distance in LAB color space
@@ -51,6 +59,62 @@ function generateColorByScheme(baseHue: number, scheme: ColorScheme, index: numb
       brightness = 0.75 + Math.random() * 0.25;
       break;
 
+    case 'gamutMask':
+      // Get the current gamut mask index from state
+      const gamutMaskIndex = window.gamutMaskState !== undefined ? window.gamutMaskState : 0;
+      
+      // Define a few classic gamut mask shapes
+      const gamutMasks = [
+        // Complementary - a narrow shape across the color wheel
+        (h: number) => {
+          const angle = (h - baseHue + 360) % 360;
+          return (angle < 60 || (angle > 170 && angle < 230));
+        },
+        // Triadic - three areas spaced 120° apart
+        (h: number) => {
+          const angle = (h - baseHue + 360) % 360;
+          return (angle < 40 || (angle > 115 && angle < 155) || (angle > 235 && angle < 275));
+        },
+        // Split complementary - a Y shape
+        (h: number) => {
+          const angle = (h - baseHue + 360) % 360;
+          return (angle < 50 || (angle > 150 && angle < 190) || (angle > 200 && angle < 240));
+        },
+        // Analogous - a slice of the color wheel
+        (h: number) => {
+          const angle = (h - baseHue + 360) % 360;
+          return (angle < 90);
+        }
+      ];
+      
+      // Select a mask shape based on the global state
+      const selectedMask = gamutMasks[gamutMaskIndex % gamutMasks.length];
+      
+      // Generate a random hue, but keep trying until it falls within the mask shape
+      let masked = false;
+      let attempts = 0;
+      const MAX_ATTEMPTS = 100;
+      
+      // Initialize hue with a default value
+      hue = baseHue;
+      
+      while (!masked && attempts < MAX_ATTEMPTS) {
+        // Try a random hue within the 360° range
+        const testHue = Math.random() * 360;
+        masked = selectedMask(testHue);
+        if (masked) {
+          hue = testHue;
+        }
+        attempts++;
+      }
+      
+      // If we couldn't find a color within the mask, hue will remain at baseHue
+      
+      // For colors within the mask, use high saturation and brightness
+      saturation = 0.7 + Math.random() * 0.3;
+      brightness = 0.7 + Math.random() * 0.3;
+      break;
+
     default:
       hue = baseHue;
       saturation = 0.75;
@@ -87,6 +151,13 @@ function generateRandomColors(count: number, scheme: ColorScheme): string[] {
   return colors;
 }
 
+// Create a global state for gamut mask index (since we can't pass it directly to the function)
+declare global {
+  interface Window {
+    gamutMaskState?: number;
+  }
+}
+
 export default function Home() {
   const [numCards, setNumCards] = useState(3);
   const [cardSize] = useState(400); // Fixed size
@@ -96,13 +167,27 @@ export default function Home() {
   const [refreshTime, setRefreshTime] = useState(5); // Default 5 seconds
   const [isAutoRefreshing, setIsAutoRefreshing] = useState(false);
   const [countdown, setCountdown] = useState(refreshTime);
+  const [currentGamutMask, setCurrentGamutMask] = useState(0);
 
   // Initialize colors on client side only
   useEffect(() => {
     setColors(generateRandomColors(numCards, colorScheme));
   }, []); // Empty dependency array for initial render only
 
+  // Set the global gamut mask state whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.gamutMaskState = currentGamutMask;
+    }
+  }, [currentGamutMask]);
+
   const generateNewColors = useCallback(() => {
+    // Remove the automatic rotation of gamut masks
+    // This way the mask stays the same until manually changed by the user
+    // if (colorScheme === 'gamutMask') {
+    //   // Rotate through the different gamut masks
+    //   setCurrentGamutMask((prev) => (prev + 1) % gamutMaskNames.length);
+    // }
     setColors(generateRandomColors(numCards, colorScheme));
     setCountdown(refreshTime); // Reset countdown after generating new colors
   }, [numCards, colorScheme, refreshTime]);
@@ -154,6 +239,15 @@ export default function Home() {
     }
   };
 
+  const handleGamutMaskChange = (index: number) => {
+    setCurrentGamutMask(index);
+    if (typeof window !== 'undefined') {
+      window.gamutMaskState = index;
+    }
+    // Generate new colors using the selected mask
+    setColors(generateRandomColors(numCards, colorScheme));
+  };
+
   const toggleAutoRefresh = () => {
     setIsAutoRefreshing(prev => !prev);
     if (!isAutoRefreshing) {
@@ -162,6 +256,9 @@ export default function Home() {
   };
 
   const getSchemeDisplayName = (scheme: ColorScheme): string => {
+    if (scheme === 'gamutMask') {
+      return `Gamut Mask: ${gamutMaskNames[currentGamutMask]}`;
+    }
     return scheme.charAt(0).toUpperCase() + scheme.slice(1);
   };
 
@@ -214,6 +311,8 @@ export default function Home() {
                 onColorSchemeChange={handleColorSchemeChange}
                 refreshTime={refreshTime}
                 onRefreshTimeChange={handleRefreshTimeChange}
+                currentGamutMask={currentGamutMask}
+                onGamutMaskChange={handleGamutMaskChange}
               />
             </div>
           </div>
